@@ -3,22 +3,35 @@
 /* Magic Mirror
  * Module: MMM-GoogleKeep
  *
- * By 
+ * By taxilof
  * MIT Licensed.
  */
 
 Module.register("MMM-GoogleKeep", {
+
+	
 	defaults: {
-		updateInterval: 60000,
-		retryDelay: 5000
+		updateInterval: 600000,
+		retryDelay: 50000,
+		
+		username: 'test@example.com',
+		password: 'pass',
+		noteId: 'id'
+		
 	},
 
 	requiresVersion: "2.1.0", // Required version of MagicMirror
 
 	start: function() {
+		Log.log('Starting module: ' + this.name);
+
 		var self = this;
 		var dataRequest = null;
 		var dataNotification = null;
+		var noteData = null;
+		
+		this.sendSocketNotification('CONFIG', this.config);
+		this.sendSocketNotification('INITIALIZE', null);
 
 		//Flag for check if module is loaded
 		this.loaded = false;
@@ -39,7 +52,7 @@ Module.register("MMM-GoogleKeep", {
 	getData: function() {
 		var self = this;
 
-		var urlApi = "https://jsonplaceholder.typicode.com/posts/1";
+		var urlApi = "https://jsonplaceholder.typicode.com/todos/1";
 		var retry = true;
 
 		var dataRequest = new XMLHttpRequest();
@@ -86,14 +99,16 @@ Module.register("MMM-GoogleKeep", {
 
 	getDom: function() {
 		var self = this;
+		
 
 		// create element wrapper for show into the module
 		var wrapper = document.createElement("div");
 		// If this.dataRequest is not empty
+		/*
 		if (this.dataRequest) {
 			var wrapperDataRequest = document.createElement("div");
-			// check format https://jsonplaceholder.typicode.com/posts/1
 			wrapperDataRequest.innerHTML = this.dataRequest.title;
+			// check format https://jsonplaceholder.typicode.com/posts/1
 
 			var labelDataRequest = document.createElement("label");
 			// Use translate function
@@ -109,7 +124,18 @@ Module.register("MMM-GoogleKeep", {
 		if (this.dataNotification) {
 			var wrapperDataNotification = document.createElement("div");
 			// translations  + datanotification
-			wrapperDataNotification.innerHTML =  this.translate("UPDATE") + ": " + this.dataNotification.date;
+			wrapperDataNotification.innerHTML =  this.dataNotification;
+
+			wrapper.appendChild(wrapperDataNotification);
+		}
+		*/
+		if (this.noteData) {
+			var wrapperDataNotification = document.createElement("div");
+			wrapperDataNotification.style.textAlign= "left";
+			noteDataHTML = this.noteData.replace(/(\n)/gm,"<br>");
+			Log.log('XXX' + noteDataHTML);
+			wrapperDataNotification.innerHTML =  noteDataHTML;
+
 
 			wrapper.appendChild(wrapperDataNotification);
 		}
@@ -148,10 +174,17 @@ Module.register("MMM-GoogleKeep", {
 
 	// socketNotificationReceived from helper
 	socketNotificationReceived: function (notification, payload) {
-		if(notification === "MMM-GoogleKeep-NOTIFICATION_TEST") {
-			// set dataNotification
-			this.dataNotification = payload;
+		console.log('jup notify: ' + payload);
+		if(notification === "note_text") {
+			this.noteData = payload;
 			this.updateDom();
 		}
+		/*
+		if(notification == "fox") {
+			// set dataNotification
+			console.log("[" + self.name + "]  got note_text: " + payload);
+			this.noteData = payload;
+			this.updateDom();
+		}*/
 	},
 });

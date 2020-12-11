@@ -1,10 +1,16 @@
 {
   "name": "MMM-GoogleKeep",
   "version": "1.0.0",
-  "description": "Todo: Insert description here!",
+  "description": "Lists one Note from Google Keep",
   "main": "MMM-GoogleKeep.js",
-  "author": "",
+  "author": "taxilof",
   "license": "MIT",
+  "repository": {
+    "type": "git"
+  },
+  "dependencies": {
+    "python-shell": "latest"
+  },
   "devDependencies": {
     "grunt": "latest",
     "grunt-eslint": "latest",
@@ -13,6 +19,7 @@
     "grunt-stylelint": "latest",
     "grunt-yamllint": "latest",
     "stylelint-config-standard": "latest",
-    "time-grunt": "latest"
+    "time-grunt": "latest",
+    "python-shell": "latest"
   }
 }
