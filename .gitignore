@@ -1,0 +1,6 @@
+.DS_Store
+.idea/
+.python-version
+node_modules/
+package-lock.json
+venv/

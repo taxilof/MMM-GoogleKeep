@@ -12,9 +12,7 @@ const {PythonShell} = require('python-shell');
 var pyshell;
 
 module.exports = NodeHelper.create({
-    
-    
-    
+
     consolePrefix: '[MMM-GoogleKeep_helper]:: ',
     
     start: function() {
@@ -94,19 +92,4 @@ module.exports = NodeHelper.create({
     sendNotificationTest: function(payload) {
         this.sendSocketNotification("MMM-GoogleKeep-NOTIFICATION_TEST", payload);
     },
-
-    // this you can create extra routes for your module
-    extraRoutes: function() {
-        var self = this;
-        this.expressApp.get("/MMM-GoogleKeep/extra_route", function(req, res) {
-            // call another function
-            values = self.anotherFunction();
-            res.send(values);
-        });
-    },
-
-    // Test another function
-    anotherFunction: function() {
-        return {date: new Date()};
-    }
 });
