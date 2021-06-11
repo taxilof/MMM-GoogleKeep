@@ -22,19 +22,16 @@ def to_node(type, message):
         pass
 
     sys.stdout.flush()
-	
-	
-
 
 
 if __name__ == '__main__':
     try:
         config_json_str = sys.argv[1]
-        #print(config_json_str)
         config_json = json.loads(config_json_str)
         cfg_username = config_json['username']
         cfg_password = config_json['password']
         cfg_note_id = config_json['noteId']
+        cfg_max_lines = config_json['maxLines']
         #to_node("debug", 'user: ' + cfg_username + ' pw len: ' + str(len(cfg_password)) + ' note id: ' + cfg_note_id)
     except Exception:
         to_node("debug", 'could not parse config')
@@ -42,18 +39,13 @@ if __name__ == '__main__':
     
     #to_node("debug", 'Google Keep script started')
     #to_node("debug", sys.argv)
-    
-    
+
     success = keep.login(cfg_username, cfg_password)
     gnote = keep.get(cfg_note_id)
-   
-    
-    # use order of google keep
-    notes = ""
-    for note in gnote.unchecked:
-        notes += str(note) + "\n"
-    for note in gnote.checked:
-        notes += str(note) + "\n"
 
+    text = gnote.text
+    lines = text.split('\n')
+    lines = lines[:cfg_max_lines]
+    text = '\n'.join(lines)
     
-    to_node("note_text", notes)
+    to_node("note_text", text)

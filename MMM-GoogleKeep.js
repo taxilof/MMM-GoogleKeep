@@ -9,16 +9,6 @@
 
 Module.register("MMM-GoogleKeep", {
 
-    
-    defaults: {
-        updateInterval: 600000,
-        retryDelay: 50000,
-        
-        username: 'test@example.com',
-        password: 'pass',
-        noteId: 'id'
-        
-    },
 
     requiresVersion: "2.1.0", // Required version of MagicMirror
 
@@ -29,106 +19,30 @@ Module.register("MMM-GoogleKeep", {
         var dataRequest = null;
         var dataNotification = null;
         var noteData = null;
-        
+
         this.sendSocketNotification('MMM-GoogleKeep-CONFIG', this.config);
         this.sendSocketNotification('MMM-GoogleKeep-INITIALIZE', null);
 
-        //Flag for check if module is loaded
+        // Flag to check if module is loaded
         this.loaded = false;
 
+        Log.log("update interval is" + this.config.updateInterval);
+
         // Schedule update timer.
-        this.getData();
         setInterval(function() {
-            self.updateDom();
-        }, this.config.updateInterval);
+            self.process();
+        }, this.config.updateInterval * 1000);
     },
 
-    /*
-     * getData
-     * function example return data and show it in the module wrapper
-     * get a URL request
-     *
-     */
-    getData: function() {
-        var self = this;
-
-        var urlApi = "https://jsonplaceholder.typicode.com/todos/1";
-        var retry = true;
-
-        var dataRequest = new XMLHttpRequest();
-        dataRequest.open("GET", urlApi, true);
-        dataRequest.onreadystatechange = function() {
-            console.log(this.readyState);
-            if (this.readyState === 4) {
-                console.log(this.status);
-                if (this.status === 200) {
-                    self.processData(JSON.parse(this.response));
-                } else if (this.status === 401) {
-                    self.updateDom(self.config.animationSpeed);
-                    Log.error(self.name, this.status);
-                    retry = false;
-                } else {
-                    Log.error(self.name, "Could not load data.");
-                }
-                if (retry) {
-                    self.scheduleUpdate((self.loaded) ? -1 : self.config.retryDelay);
-                }
-            }
-        };
-        dataRequest.send();
-    },
-
-
-    /* scheduleUpdate()
-     * Schedule next update.
-     *
-     * argument delay number - Milliseconds before next update.
-     *  If empty, this.config.updateInterval is used.
-     */
-    scheduleUpdate: function(delay) {
-        var nextLoad = this.config.updateInterval;
-        if (typeof delay !== "undefined" && delay >= 0) {
-            nextLoad = delay;
-        }
-        nextLoad = nextLoad ;
-        var self = this;
-        setTimeout(function() {
-            self.getData();
-        }, nextLoad);
-    },
 
     getDom: function() {
+        console.log("getting dom");
+        Log.log("11getting dom");
         var self = this;
-        
+
 
         // create element wrapper for show into the module
         var wrapper = document.createElement("div");
-        // If this.dataRequest is not empty
-        /*
-        if (this.dataRequest) {
-            var wrapperDataRequest = document.createElement("div");
-            wrapperDataRequest.innerHTML = this.dataRequest.title;
-            // check format https://jsonplaceholder.typicode.com/posts/1
-
-            var labelDataRequest = document.createElement("label");
-            // Use translate function
-            //             this id defined in translations files
-            labelDataRequest.innerHTML = this.translate("TITLE");
-
-
-            wrapper.appendChild(labelDataRequest);
-            wrapper.appendChild(wrapperDataRequest);
-        }
-
-        // Data from helper
-        if (this.dataNotification) {
-            var wrapperDataNotification = document.createElement("div");
-            // translations  + datanotification
-            wrapperDataNotification.innerHTML =  this.dataNotification;
-
-            wrapper.appendChild(wrapperDataNotification);
-        }
-        */
         if (this.noteData) {
             var wrapperDataNotification = document.createElement("div");
             wrapperDataNotification.style.textAlign= "left";
@@ -161,7 +75,12 @@ Module.register("MMM-GoogleKeep", {
         };
     },
 
+    process: function() {
+        this.sendSocketNotification('MMM-GoogleKeep-INITIALIZE', null);
+    },
+
     processData: function(data) {
+        console.log("processing");
         var self = this;
         this.dataRequest = data;
         if (this.loaded === false) { self.updateDom(self.config.animationSpeed) ; }
@@ -179,12 +98,5 @@ Module.register("MMM-GoogleKeep", {
             this.noteData = payload;
             this.updateDom();
         }
-        /*
-        if(notification == "fox") {
-            // set dataNotification
-            console.log("[" + self.name + "]  got note_text: " + payload);
-            this.noteData = payload;
-            this.updateDom();
-        }*/
     },
 });

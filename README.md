@@ -10,6 +10,7 @@ As there is no official API for Google Keep, the python module [gkeepapi](https:
 
 ## Screenshots
 
+
 ## Dependencies
 
 - [python-shell](https://www.npmjs.com/package/python-shell)
@@ -59,7 +60,8 @@ var config = {
                 username: 'test@example.com',
                 password: 'pass',
                 noteId: 'id',
-              
+                updateInterval: 60,
+                maxLines: 30,
             }
         }
     ]
@@ -74,6 +76,8 @@ var config = {
 | `username`       | *Required* Your Google Keep username
 | `password`       | *Required* Your Google Keep password
 | `noteId`         | *Required* The ID of the list you want to display. Open the list in browser and copy the ID from adress bar (example: '1aGdg26b2Aza6ga3aKa6gafa41e1Eag8LFVkE_klE4ap0i13HGoBmNeLp3a4')
+| `updateInterval`       | *Required* How many seconds to wait before fetching an update
+| `maxLines`       | *Required* Maximum number of lines to display
 
 ## Issues
 
