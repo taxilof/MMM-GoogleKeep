@@ -8,7 +8,8 @@ The current state of the project is proof of concept. If you need more functiona
 As there is no official API for Google Keep, the python module [gkeepapi](https://github.com/kiwiz/gkeepapi) is used.
 
 
-## Screenshots
+## Screenshot
+<img width="576" alt="Screen Shot 2021-06-11 at 8 47 56 AM" src="https://user-images.githubusercontent.com/38865319/121759675-c06dc500-cadb-11eb-8d6c-ea73bc7c66ba.png">
 
 
 ## Dependencies
@@ -43,6 +44,11 @@ npm install
 pip3 install -U gkeepapi
 ```
 
+## Troubleshooting
+If you are hitting `gkeepapi.exception.LoginException: ('BadAuthentication', None)`, follow these steps:
+- Double check your username and password
+- Try downgrading requests: `pip3 install requests==2.23.0`
+- Try downloading the latest python3 version. This is more involved, see [instructions here](https://www.raspberrypi.org/forums/viewtopic.php?t=291310#p1761359).
 
 ## Using the module
 
