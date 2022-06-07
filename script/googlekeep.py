@@ -32,6 +32,7 @@ if __name__ == '__main__':
         cfg_password = config_json['password']
         cfg_note_id = config_json['noteId']
         cfg_max_lines = config_json['maxLines']
+        cfg_get_unchecked = config_json.get('unchecked_only', False)
         #to_node("debug", 'user: ' + cfg_username + ' pw len: ' + str(len(cfg_password)) + ' note id: ' + cfg_note_id)
     except Exception:
         to_node("debug", 'could not parse config')
@@ -42,10 +43,14 @@ if __name__ == '__main__':
 
     success = keep.login(cfg_username, cfg_password)
     gnote = keep.get(cfg_note_id)
+    header = gnote.title
 
-    text = gnote.text
-    lines = text.split('\n')
-    lines = lines[:cfg_max_lines]
-    text = '\n'.join(lines)
+    if cfg_get_unchecked:
+        items = gnote.unchecked
+    else:
+        items = gnote.items
+
+    trimmed_lines = items[:cfg_max_lines]
+    text = [str(x) for x in trimmed_lines]
     
-    to_node("note_text", text)
+    to_node("note_text", {'header':header, 'text':text})
