@@ -34,6 +34,9 @@ Module.register("MMM-GoogleKeep", {
         }, this.config.updateInterval * 1000);
     },
 
+    getHeader: function() {
+        return this.headerData ? this.headerData : "";
+    },
 
     getDom: function() {
         console.log("getting dom");
@@ -43,13 +46,16 @@ Module.register("MMM-GoogleKeep", {
 
         // create element wrapper for show into the module
         var wrapper = document.createElement("div");
+        if(this.config.width){
+            wrapper.style.width = this.config.width + 'px';
+        }
+
         if (this.noteData) {
             var wrapperDataNotification = document.createElement("div");
             wrapperDataNotification.style.textAlign= "left";
             noteDataHTML = this.noteData.replace(/(\n)/gm,"<br>");
             Log.log('XXX' + noteDataHTML);
             wrapperDataNotification.innerHTML =  noteDataHTML;
-
 
             wrapper.appendChild(wrapperDataNotification);
         }
@@ -95,7 +101,8 @@ Module.register("MMM-GoogleKeep", {
     socketNotificationReceived: function (notification, payload) {
         console.log('jup notify: ' + payload);
         if(notification === "note_text") {
-            this.noteData = payload;
+            this.noteData = payload.text.join('\n');
+            this.headerData = payload.header;
             this.updateDom();
         }
     },
