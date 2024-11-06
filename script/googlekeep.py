@@ -29,11 +29,12 @@ if __name__ == '__main__':
         config_json_str = sys.argv[1]
         config_json = json.loads(config_json_str)
         cfg_username = config_json['username']
-        cfg_password = config_json['password']
+        cfg_password = config_json.get('password')
+        cfg_master_token = config_json.get('masterToken')
         cfg_note_id = config_json['noteId']
         cfg_max_lines = config_json['maxLines']
         cfg_get_unchecked = config_json.get('unchecked_only', False)
-        #to_node("debug", 'user: ' + cfg_username + ' pw len: ' + str(len(cfg_password)) + ' note id: ' + cfg_note_id)
+        #to_node("debug", 'user: ' + cfg_username + ' pw len: ' + str(len(cfg_password)) + ' mastertoken provided: ' + bool(cfg_master_token) + ' note id: ' + cfg_note_id)
     except Exception:
         to_node("debug", 'could not parse config')
 
@@ -41,7 +42,12 @@ if __name__ == '__main__':
     #to_node("debug", 'Google Keep script started')
     #to_node("debug", sys.argv)
 
-    success = keep.login(cfg_username, cfg_password)
+    if cfg_password:
+        success = keep.login(cfg_username, cfg_password)
+    elif cfg_master_token:
+        success = keep.authenticate(cfg_username, cfg_master_token)
+    else:
+        raise ValueError('could not find password or masterToken in config')
     gnote = keep.get(cfg_note_id)
     header = gnote.title
 
