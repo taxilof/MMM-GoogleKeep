@@ -53,7 +53,11 @@ Module.register("MMM-GoogleKeep", {
         if (this.noteData) {
             var wrapperDataNotification = document.createElement("div");
             wrapperDataNotification.style.textAlign= "left";
-            noteDataHTML = this.noteData.replace(/(\n)/gm,"<br>");
+            noteDataHTML = this.noteData.replace(
+                /[<>]/g, ""
+            ).replace(
+                /(\n)/gm, "<br>"
+            ).replace(/  ☐/gm, "└─ ☐");
             Log.log('XXX' + noteDataHTML);
             wrapperDataNotification.innerHTML =  noteDataHTML;
 
