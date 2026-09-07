@@ -77,7 +77,12 @@ var config = {
 ```
 
 
-### Configuration options
+### Multiple module instances
+
+You can add several `MMM-GoogleKeep` entries in `config.js`, each with a different `noteId`.  
+MagicMirror only loads one `node_helper` per module name, so this module keys config and `note_text` socket payloads by each frontend instance's `identifier`. That way every instance shows its own note instead of all instances sharing the last fetched list.
+
+## Configuration options
 
 | Option           | Description
 |----------------- |-----------
